@@ -19,7 +19,8 @@ const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
         className="w-6 h-6"
       />
 
-      <Text className={`${focused ? 'font-semibold' : "font-bold"} text-xs`}>
+      <Text className={`${focused ? 'font-semibold' : "font-bold"} text-xs`}
+        style={{ color: color }}>
         {name}
       </Text>
     </View>
@@ -31,7 +32,16 @@ function TabsLayout() {
   return (
     <>
       <Tabs
-        screenOptions={{ tabBarShowLabel: false }}
+        screenOptions={{
+          tabBarShowLabel: false, tabBarActiveTintColor: '#FFA001',
+          tabBarInactiveTintColor: '#CDCD30',
+          tabBarStyle: {
+            backgroundColor: '#161622',
+            borderTopWidth: 1,
+            borderTopColor: "#232533",
+            height: 84,
+          }
+        }}
       >
         <Tabs.Screen
           name="home"
@@ -54,7 +64,7 @@ function TabsLayout() {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return <TabIcon
-                icon={icons.home}
+                icon={icons.plus}
                 color={color}
                 name="Add"
                 focused={focused} />;
@@ -68,7 +78,7 @@ function TabsLayout() {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return <TabIcon
-                icon={icons.home}
+                icon={icons.profile}
                 color={color}
                 name="Profile"
                 focused={focused} />;

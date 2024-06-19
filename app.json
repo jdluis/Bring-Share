@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Eventify",
-    "slug": "Eventify",
+    "name": "Bring&Share",
+    "slug": "Bring&Share",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "eventify",
+    "scheme": "bringandshare",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

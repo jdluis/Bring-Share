@@ -1,14 +1,14 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const SignUp = () => {
+const JoinWithCode = () => {
   return (
     <SafeAreaView>
-      <Text>SignUp</Text>
+      <Text>JoinWithCode</Text>
     </SafeAreaView>
   )
 }
 
-export default SignUp
+export default JoinWithCode
 
 const styles = StyleSheet.create({})
