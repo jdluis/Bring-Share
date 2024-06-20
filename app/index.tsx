@@ -4,9 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import images from "@/constants/images"
 import CustomButton from '@/components/CustomButton'
 import { StatusBar } from 'expo-status-bar'
-import { router } from 'expo-router'
+import { Redirect, router } from 'expo-router'
+import { useGlobalContex } from '@/context/GlobalProvider'
 
 const index = () => {
+  const { isLoading, isLoggedIn } = useGlobalContex();
+
+  if (!isLoading || isLoggedIn) return <Redirect href={"/home"} />;
   return (
     <SafeAreaView className=' bg-bg_onboarding h-full'>
       <ScrollView contentContainerStyle={{ height: '100%' }}>
@@ -37,18 +41,18 @@ const index = () => {
 
           <CustomButton
             title="Continue with Email"
-            handlePress={() => {router.push('/sign-in')}}
+            handlePress={() => { router.push('/sign-in') }}
             containerStyles='w-full mt-7'
           />
-           <CustomButton
+          <CustomButton
             title="Continue with event code"
-            handlePress={() => {router.push('/enter-code')}}
+            handlePress={() => { router.push('/enter-code') }}
             containerStyles='w-full mt-7 bg-gray-200 '
           />
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor='#161622' style='light'/>
+      <StatusBar backgroundColor='#161622' style='light' />
     </SafeAreaView>
   )
 }

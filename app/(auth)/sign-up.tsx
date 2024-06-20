@@ -24,10 +24,12 @@ const SignUp = () => {
     setIsSubmitting(true)
 
     try {
+      //maybe the type error config of undefined is because result dont is used yet.
       const result = await createUser(form)
 
       //set to global state
 
+      //Some error before thee router
       router.replace('/home')
     } catch (error: any) {
       Alert.alert("Error", error.message)
