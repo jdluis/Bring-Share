@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '@/constants/images'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
-import { Link } from 'expo-router'
-import {createUser} from '@/lib/appwrite'
+import { Link, router } from 'expo-router'
+import { createUser } from '@/lib/appwrite'
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -16,8 +16,24 @@ const SignUp = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
-    createUser(form)
+  const submit = async () => {
+    if (!form.username || !form.email || !form.password) {
+      return Alert.alert('Error', 'Please fill all the fields')
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await createUser(form)
+
+      //set to global state
+
+      router.replace('/home')
+    } catch (error: any) {
+      Alert.alert("Error", error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
   return (
     <SafeAreaView className='bg-primary h-full'>
@@ -30,7 +46,7 @@ const SignUp = () => {
           />
 
           <Text className='text-2xl text-white mt-10 font-semibold'>Sign up to Bring & Share</Text>
-        
+
           <FormField
             title="Username"
             value={form.username}
@@ -38,7 +54,7 @@ const SignUp = () => {
             otherStyles="mt-7"
             placeholder='Example: bringshare@gmail.com'
           />
-          
+
           <FormField
             title="Email"
             value={form.email}
@@ -55,7 +71,7 @@ const SignUp = () => {
             otherStyles="mt-7"
           />
 
-          <CustomButton 
+          <CustomButton
             title='Sign Up'
             handlePress={submit}
             containerStyles='mt-7'
