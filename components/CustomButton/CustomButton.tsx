@@ -1,14 +1,7 @@
 import { Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { EventHandler } from 'react-native-reanimated'
-
-interface CustomButtonProps {
-    title: string,
-    handlePress?: any,
-    containerStyles?: string,
-    textStyles?: string,
-    isLoading?: boolean
-}
+import CustomButtonProps from './CustomButton.types'
 
 const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoading }: CustomButtonProps) => {
     return (

@@ -2,7 +2,7 @@ import React from 'react'
 import { ScrollView, Text, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from "@/constants/images"
-import CustomButton from '@/components/CustomButton'
+import CustomButton from '@/components/CustomButton/CustomButton'
 import { StatusBar } from 'expo-status-bar'
 import { Redirect, router } from 'expo-router'
 import { useGlobalContex } from '@/context/GlobalProvider'
