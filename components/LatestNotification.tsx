@@ -6,6 +6,22 @@ interface LatestNotificationProps {
   notifications: NotificationInterface[];
 }
 
+/*   //Temporal
+  const [notifications, setNotifications] = useState([
+    {
+      id: "1",
+      creator: user,
+      action: "addItem",
+      date: 5,
+    },
+    {
+      id: "2",
+      creator: user,
+      action: "deleteItem",
+      date: 10,
+    },
+  ]); */
+
 const LatestNotification = ({ notifications }: LatestNotificationProps) => {
   return (
     <FlatList

@@ -10,7 +10,8 @@ import { useGlobalContex } from '@/context/GlobalProvider'
 const index = () => {
   const { isLoading, isLoggedIn } = useGlobalContex();
 
-  if (!isLoading || isLoggedIn) return <Redirect href={"/home"} />;
+  if (!isLoading && isLoggedIn) return <Redirect href={"/home"} />;
+
   return (
     <SafeAreaView className=' bg-bg_onboarding h-full'>
       <ScrollView contentContainerStyle={{ height: '100%' }}>

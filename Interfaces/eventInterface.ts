@@ -1,7 +1,7 @@
 import CreatorInterface from "./userInterface";
 
 export default interface EventInterface {
-    id: string,
+    $id: string,
     title: string,
     startDate: Date,
     finishDate: Date,

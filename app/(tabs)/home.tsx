@@ -9,42 +9,27 @@ import {
 import React, { useState } from "react";
 import images from "@/constants/images";
 import SearchInput from "@/components/SearchInput";
-import LatestNotification from "@/components/LatestNotification";
 import EmptyState from "@/components/EmptyState";
-import { getAllEvents } from "@/lib/appwrite";
+import { getAllEvents, getLatestEvents } from "@/lib/appwrite";
 import useAppWrite from "@/lib/useAppwrite";
 import EventCard from "@/components/EventCard";
 import { useGlobalContex } from "@/context/GlobalProvider";
+import LatestEvents from "@/components/LatestEvents";
 
 const Home = () => {
   const { user } = useGlobalContex();
   const [refreshing, setRefreshing] = useState(false);
   const { data: events, refetch, isLoading } = useAppWrite(getAllEvents);
-
-  //Temporal
-  const [notifications, setNotifications] = useState([
-    {
-      id: "1",
-      creator: user,
-      action: "addItem",
-      date: 5,
-    },
-    {
-      id: "2",
-      creator: user,
-      action: "deleteItem",
-      date: 10,
-    },
-  ]);
+  const { data: latestEvents } = useAppWrite(getLatestEvents);
 
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
-  {
-    console.log(user);
-  }
+  
+  console.log("User: " + user)
+  
   return (
     <SafeAreaView className="bg-primary border-2 h-full">
       <FlatList
@@ -74,8 +59,8 @@ const Home = () => {
 
             <SearchInput value={undefined} handleChangeText={undefined} />
             <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-gray-300">Latest Notifications</Text>
-              <LatestNotification notifications={notifications} />
+              <Text className="text-gray-300">Latest Events</Text>
+              <LatestEvents events={latestEvents} />
             </View>
           </View>
         )}

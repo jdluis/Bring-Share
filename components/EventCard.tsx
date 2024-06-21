@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import EventInterface from "@/Interfaces/eventInterface";
 import icons from "@/constants/icons";
+import { router } from "expo-router";
 
 interface EventCardProps {
   event: EventInterface;
@@ -45,7 +46,11 @@ const EventCard = ({
         </View>
       </View>
 
-      <TouchableOpacity className="w-full h-60 mt-3 relative justify-center items-center">
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => router.push("")} /* To the event id detail */
+        className="w-full h-60 mt-3 relative justify-center items-center"
+      >
         <Image
           source={{ uri: coverImg }}
           resizeMode="cover"
