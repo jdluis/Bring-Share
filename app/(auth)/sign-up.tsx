@@ -1,60 +1,62 @@
-import { StyleSheet, Text, View, ScrollView, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import images from '@/constants/images'
-import FormField from '@/components/FormField'
-import CustomButton from '@/components/CustomButton/CustomButton'
-import { Link, router } from 'expo-router'
-import { createUser } from '@/lib/appwrite'
+import { StyleSheet, Text, View, ScrollView, Image, Alert } from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import images from "@/constants/images";
+import FormField from "@/components/FormField";
+import CustomButton from "@/components/CustomButton/CustomButton";
+import { Link, router } from "expo-router";
+import { createUser } from "@/lib/appwrite";
 
 const SignUp = () => {
   const [form, setForm] = useState({
     username: "",
     email: "",
-    password: ""
-  })
+    password: "",
+  });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
     if (!form.username || !form.email || !form.password) {
-      return Alert.alert('Error', 'Please fill all the fields')
+      return Alert.alert("Error", "Please fill all the fields");
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      //maybe the type error config of undefined is because result dont is used yet.
-      const result = await createUser(form)
+      const result = await createUser(form);
 
       //set to global state
-
-      //Some error before thee router
-      router.replace('/home')
+      
+      if (!result) throw Error;
+ 
+      router.replace("/home");
     } catch (error: any) {
-      Alert.alert("Error", error.message)
+      Alert.alert("Error", error.message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
   return (
-    <SafeAreaView className='bg-primary h-full'>
+    <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className='w-full justify-center min-h-[85vh] px-4 my-6'>
+        <View className="w-full justify-center min-h-[85vh] px-4 my-6">
           <Image
             source={images.logo}
-            resizeMode='contain'
-            className='w-[200px] h-[35px] mx-auto'
+            resizeMode="contain"
+            className="w-[200px] h-[35px] mx-auto"
           />
 
-          <Text className='text-2xl text-white mt-10 font-semibold'>Sign up to Bring & Share</Text>
+          <Text className="text-2xl text-white mt-10 font-semibold">
+            Sign up to Bring & Share
+          </Text>
 
           <FormField
             title="Username"
             value={form.username}
             handleChangeText={(e: string) => setForm({ ...form, username: e })}
             otherStyles="mt-7"
-            placeholder='Example: bringshare@gmail.com'
+            placeholder="Example: bringshare@gmail.com"
           />
 
           <FormField
@@ -63,7 +65,7 @@ const SignUp = () => {
             handleChangeText={(e: string) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
             keyboardType="email-address"
-            placeholder='Example: bringshare@gmail.com'
+            placeholder="Example: bringshare@gmail.com"
           />
 
           <FormField
@@ -74,24 +76,29 @@ const SignUp = () => {
           />
 
           <CustomButton
-            title='Sign Up'
+            title="Sign Up"
             handlePress={submit}
-            containerStyles='mt-7'
+            containerStyles="mt-7"
             isLoading={isSubmitting}
           />
 
-          <View className='justify-center pt-5 flex-row gap-2'>
-            <Text className='text-lg text-gray-100 font-regular'>
+          <View className="justify-center pt-5 flex-row gap-2">
+            <Text className="text-lg text-gray-100 font-regular">
               Have an account already?
             </Text>
-            <Link className='text-lg font-semibold text-secondary' href="/sign-in" >Sign In</Link>
+            <Link
+              className="text-lg font-semibold text-secondary"
+              href="/sign-in"
+            >
+              Sign In
+            </Link>
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
