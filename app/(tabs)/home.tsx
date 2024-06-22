@@ -28,13 +28,11 @@ const Home = () => {
     setRefreshing(false);
   };
   
-  console.log("User: " + user)
-  
   return (
     <SafeAreaView className="bg-primary border-2 h-full">
       <FlatList
         data={events}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => <EventCard event={item} />}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-6">
@@ -57,7 +55,8 @@ const Home = () => {
               </View>
             </View>
 
-            <SearchInput value={undefined} handleChangeText={undefined} />
+            <SearchInput />
+            
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-gray-300">Latest Events</Text>
               <LatestEvents events={latestEvents} />
