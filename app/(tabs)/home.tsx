@@ -27,6 +27,8 @@ const Home = () => {
     await refetch();
     setRefreshing(false);
   };
+
+  console.log(user)
   
   return (
     <SafeAreaView className="bg-primary border-2 h-full">
@@ -42,7 +44,7 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className="text-2xl font-semibold text-white">
-                  {user ? user.username : "Username"}
+                  {user?.username}
                 </Text>
               </View>
 
