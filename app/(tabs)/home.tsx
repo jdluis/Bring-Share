@@ -27,8 +27,6 @@ const Home = () => {
     await refetch();
     setRefreshing(false);
   };
-
-  console.log(user)
   
   return (
     <SafeAreaView className="bg-primary border-2 h-full">

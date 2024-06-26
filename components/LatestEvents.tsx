@@ -27,7 +27,7 @@ const zoomOut: any = {
 };
 
 interface LatestEventItemProps {
-  activeItem: EventInterface;
+  activeItem: any;
   item: EventInterface;
 }
 

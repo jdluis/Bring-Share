@@ -1,4 +1,4 @@
-import { Tabs, Redirect } from "expo-router";
+import { Tabs } from "expo-router";
 import { View, Image, Text, ImageSourcePropType } from "react-native";
 import icons from "@/constants/icons";
 
@@ -29,7 +29,7 @@ const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
   );
 };
 
-function TabsLayout() {
+function EventLayout() {
   return (
     <>
       <Tabs
@@ -46,16 +46,16 @@ function TabsLayout() {
         }}
       >
         <Tabs.Screen
-          name="home"
+          name="[$id]"
           options={{
-            title: "Home",
+            title: "Event",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return (
                 <TabIcon
                   icon={icons.home}
                   color={color}
-                  name="Home"
+                  name="Event"
                   focused={focused}
                 />
               );
@@ -64,16 +64,16 @@ function TabsLayout() {
         />
 
         <Tabs.Screen
-          name="create-event"
+          name="add-item"
           options={{
-            title: "Create",
+            title: "Add",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return (
                 <TabIcon
                   icon={icons.plus}
                   color={color}
-                  name="Create"
+                  name="Add"
                   focused={focused}
                 />
               );
@@ -81,17 +81,17 @@ function TabsLayout() {
           }}
         />
 
-        <Tabs.Screen
-          name="profile"
+<Tabs.Screen
+          name="members"
           options={{
-            title: "Profile",
+            title: "Members",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return (
                 <TabIcon
-                  icon={icons.profile}
+                  icon={icons.eye}
                   color={color}
-                  name="Profile"
+                  name="Members"
                   focused={focused}
                 />
               );
@@ -103,4 +103,4 @@ function TabsLayout() {
   );
 }
 
-export default TabsLayout;
+export default EventLayout;

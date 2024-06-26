@@ -10,6 +10,7 @@ interface EventCardProps {
 
 const EventCard = ({
   event: {
+    $id,
     title,
     creator: { username, avatar },
     coverImg,
@@ -48,7 +49,7 @@ const EventCard = ({
 
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => router.push("")} /* To the event id detail */
+        onPress={() => router.push(`/${$id}`)}
         className="w-full h-60 mt-3 relative justify-center items-center"
       >
         <Image
