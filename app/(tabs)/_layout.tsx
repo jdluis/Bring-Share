@@ -58,15 +58,15 @@ function TabsLayout() {
           }} />
 
         <Tabs.Screen
-          name="add-item"
+          name="create-event"
           options={{
-            title: "Add",
+            title: "Create Event",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => {
               return <TabIcon
                 icon={icons.plus}
                 color={color}
-                name="Add"
+                name="Create"
                 focused={focused} />;
             }
           }} />

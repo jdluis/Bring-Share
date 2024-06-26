@@ -7,5 +7,7 @@ export default interface EventInterface {
     finishDate: Date,
     description: string,
     coverImg: string,
-    creator: CreatorInterface
+    creator: CreatorInterface,
+    categories: Array<"">,
+    members: Array<"">
 }

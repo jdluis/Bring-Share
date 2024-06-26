@@ -4,7 +4,7 @@ import {  Text, View, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '@/constants/images'
-import FormField from '@/components/FormField'
+import FormTextField from '@/components/FormTextField'
 import CustomButton from '@/components/CustomButton/CustomButton'
 import { Link, router } from 'expo-router'
 import { joinWithCode } from '@/lib/appwrite'
@@ -48,7 +48,8 @@ const JoinWithCode = () => {
 
           <Text className='text-2xl text-white mt-10 font-semibold'>Join with your code invatition</Text>
 
-          <FormField
+          <FormTextField
+            type='password'
             title="Event Code"
             value={form.eventCode}
             handleChangeText={(e: string) => setForm({ ...form, eventCode: e })}
