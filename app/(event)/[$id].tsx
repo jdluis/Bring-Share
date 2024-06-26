@@ -21,13 +21,13 @@ const Event = () => {
 
   return (
     <SafeAreaView className="bg-primary border-2 h-full pt-8 px-4 ">
-      {event && !isLoading && (
+      {event[0] && !isLoading && (
         <>
           <View className="my-6 px-4 space-y-6">
             <View className="justify-between items-start flex-row mb-6 ">
               <View>
                 <Text className="text-2xl font-semibold text-white">
-                  Title: {event.title}
+                  Title: {event[0].title}
                 </Text>
               </View>
             </View>
@@ -35,7 +35,7 @@ const Event = () => {
           <ScrollView>
             <View className="p-4 ">
               <Text className="text-lg font-normal text-gray-100 ">
-                Description: {event.description}
+                Description: {event[0].description}
               </Text>
             </View>
           </ScrollView>

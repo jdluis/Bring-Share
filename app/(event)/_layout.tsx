@@ -81,7 +81,7 @@ function EventLayout() {
           }}
         />
 
-<Tabs.Screen
+        <Tabs.Screen
           name="members"
           options={{
             title: "Members",
