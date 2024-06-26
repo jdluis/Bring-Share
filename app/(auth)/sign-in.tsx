@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '@/constants/images'
-import FormField from '@/components/FormField'
+import FormTextField from '@/components/FormTextField'
 import CustomButton from '@/components/CustomButton/CustomButton'
 import { Link, router } from 'expo-router'
 import { getCurrentUser, signIn } from '@/lib/appwrite'
@@ -48,7 +48,8 @@ const SignIn = () => {
           />
 
           <Text className='text-2xl text-white mt-10 font-semibold'>Log in to Bring & Share</Text>
-          <FormField
+          <FormTextField
+            type='text'
             title="Email"
             value={form.email}
             handleChangeText={(e: string) => setForm({ ...form, email: e })}
@@ -57,7 +58,8 @@ const SignIn = () => {
             placeholder='Example: bringshare@gmail.com'
           />
 
-          <FormField
+          <FormTextField
+            type='password'
             title="Password"
             value={form.password}
             handleChangeText={(e: string) => setForm({ ...form, password: e })}
