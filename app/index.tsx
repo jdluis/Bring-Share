@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, Text, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from "@/constants/images"
@@ -6,9 +6,24 @@ import CustomButton from '@/components/CustomButton/CustomButton'
 import { StatusBar } from 'expo-status-bar'
 import { Redirect, router } from 'expo-router'
 import { useGlobalContex } from '@/context/GlobalProvider'
+import { getCurrentUser } from '@/lib/appwrite'
 
 const index = () => {
-  const { isLoading, isLoggedIn } = useGlobalContex();
+  const { isLoading, isLoggedIn, setIsLoggedIn } = useGlobalContex();
+
+  useEffect(() => {
+    const verifySession = async () => {
+      try {
+        const session = await getCurrentUser()
+        if (session) {
+          setIsLoggedIn(true)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    verifySession()
+  }, []);
 
   if (!isLoading && isLoggedIn) return <Redirect href={"/home"} />;
 
