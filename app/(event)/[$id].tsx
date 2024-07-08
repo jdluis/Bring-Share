@@ -4,6 +4,8 @@ import useAppWrite from "@/lib/useAppwrite";
 import { getEventById } from "@/lib/appwrite";
 import { useLocalSearchParams } from "expo-router";
 import icons from "@/constants/icons";
+import LatestNotification from "@/components/LatestNotification";
+import Map from "@/components/MapView";
 
 const Event = () => {
   const params = useLocalSearchParams();
@@ -20,25 +22,49 @@ const Event = () => {
   );
 
   return (
-    <SafeAreaView className="bg-primary border-2 h-full pt-8 px-4 ">
+    <SafeAreaView className="bg-primary border-2 h-full pt-8">
       {event[0] && !isLoading && (
         <>
-          <View className="my-6 px-4 space-y-6">
+          <Image
+            source={{ uri: event[0].coverImg }}
+            className="w-full h-40"
+            resizeMode="cover"
+            alt={event[0].title}
+          />
+          <View className="mt-6 px-4 ">
             <View className="justify-between items-start flex-row mb-6 ">
               <View>
-                <Text className="text-2xl font-semibold text-white">
-                  Title: {event[0].title}
+                <View className="w-[46px] h-[46px] rounded-lg border border-secondary justify-center items-center p-0.5">
+                  <Image
+                    source={{ uri: event[0].creator.avatar }}
+                    resizeMode="cover"
+                    className="w-full h-full rounded-lg"
+                  />
+                </View>
+                <Text className="text-xs text-white text-center">
+                  {event[0].creator.username}
                 </Text>
               </View>
+              <Text className="text-xl font-semibold text-white">
+                {event[0].title}
+              </Text>
+
             </View>
           </View>
           <ScrollView>
-            <View className="p-4 ">
-              <Text className="text-lg font-normal text-gray-100 ">
-                Description: {event[0].description}
+            <View>
+              <Text className="text-lg font-normal text-gray-100 px-4 ">
+                {event[0].description}
               </Text>
             </View>
           </ScrollView>
+
+          <LatestNotification notifications={[{
+            id: "1",
+            creator: event[0].creator,
+            action: "add",
+            date: Date.now()
+          }]} />
         </>
       )}
     </SafeAreaView>

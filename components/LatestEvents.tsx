@@ -40,7 +40,7 @@ const LatestEventItem = ({ activeItem, item }: LatestEventItemProps) => {
     >
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => router.push("")} /* To the event id detail */
+        onPress={() => router.push(`/${item.$id}`)}
         className="mt-3 relative justify-center items-center"
       >
         <Image
