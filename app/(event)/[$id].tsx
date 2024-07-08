@@ -5,7 +5,6 @@ import { getEventById } from "@/lib/appwrite";
 import { useLocalSearchParams } from "expo-router";
 import icons from "@/constants/icons";
 import LatestNotification from "@/components/LatestNotification";
-import Map from "@/components/MapView";
 
 const Event = () => {
   const params = useLocalSearchParams();
