@@ -81,6 +81,24 @@ function EventLayout() {
           }}
         />
 
+    <Tabs.Screen
+          name="chat"
+          options={{
+            title: "Chat",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => {
+              return (
+                <TabIcon
+                  icon={icons.eyehide}
+                  color={color}
+                  name="Chat"
+                  focused={focused}
+                />
+              );
+            },
+          }}
+        />
+
         <Tabs.Screen
           name="members"
           options={{
