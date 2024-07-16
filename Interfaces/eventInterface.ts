@@ -9,5 +9,6 @@ export default interface EventInterface {
     coverImg: string,
     creator: CreatorInterface,
     categories: Array<"">,
-    members: Array<"">
+    members: Array<"">,
+    location: string
 }
