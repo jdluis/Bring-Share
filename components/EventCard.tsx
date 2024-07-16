@@ -12,8 +12,9 @@ const EventCard = ({
   event: {
     $id,
     title,
-    creator: { username, avatar },
+    creator,
     coverImg,
+    location,
   },
 }: EventCardProps) => {
   return (
@@ -22,7 +23,7 @@ const EventCard = ({
         <View className="justify-center flex-row flex-1 items-center">
           <View className="w-[46px] h-[46px] rounded-lg border border-secondary justify-center items-center p-0.5">
             <Image
-              source={{ uri: avatar }}
+              source={{ uri: creator?.avatar }}
               resizeMode="cover"
               className="w-full h-full rounded-lg"
             />
@@ -38,7 +39,7 @@ const EventCard = ({
               numberOfLines={1}
               className="text-xs font-normal text-gray-100"
             >
-              {username}
+              {creator?.username}
             </Text>
           </View>
         </View>
