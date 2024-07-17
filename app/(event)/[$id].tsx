@@ -5,6 +5,7 @@ import { getEventById } from "@/lib/appwrite";
 import { useLocalSearchParams } from "expo-router";
 import icons from "@/constants/icons";
 import LatestNotification from "@/components/LatestNotification";
+import MapViewLocation from "@/components/MapViewLocation";
 
 const Event = () => {
   const params = useLocalSearchParams();
@@ -47,23 +48,27 @@ const Event = () => {
               <Text className="text-xl font-semibold text-white">
                 {event[0].title}
               </Text>
-
             </View>
           </View>
-          <ScrollView>
-            <View>
-              <Text className="text-lg font-normal text-gray-100 px-4 ">
-                {event[0].description}
-              </Text>
-            </View>
-          </ScrollView>
 
-          <LatestNotification notifications={[{
-            id: "1",
-            creator: event[0].creator,
-            action: "add",
-            date: Date.now()
-          }]} />
+          <View className="mb-4">
+            <Text className="text-lg font-normal text-gray-100 px-4 ">
+              {event[0].description}
+            </Text>
+          </View>
+
+          <MapViewLocation location={event[0].location} eventInfo={event[0].location + ", " + event[0].title} />
+
+          <LatestNotification
+            notifications={[
+              {
+                id: "1",
+                creator: event[0].creator,
+                action: "add",
+                date: Date.now(),
+              },
+            ]}
+          />
         </>
       )}
     </SafeAreaView>
