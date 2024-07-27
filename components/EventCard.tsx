@@ -1,8 +1,9 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import EventInterface from "@/Interfaces/eventInterface";
+import {EventInterface} from "@/Interfaces/eventInterface";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
+import { getImageUrl } from "@/lib/appwrite";
 
 interface EventCardProps {
   event: EventInterface;
@@ -13,8 +14,7 @@ const EventCard = ({
     $id,
     title,
     creator,
-    coverImg,
-    location,
+    coverId
   },
 }: EventCardProps) => {
   return (
@@ -54,7 +54,7 @@ const EventCard = ({
         className="w-full h-60 mt-3 relative justify-center items-center"
       >
         <Image
-          source={{ uri: coverImg }}
+          source={{ uri: getImageUrl(coverId) }}
           resizeMode="cover"
           className="w-full h-full rounded-xl mt-3"
         />

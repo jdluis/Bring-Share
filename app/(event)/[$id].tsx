@@ -1,7 +1,7 @@
-import { Text, SafeAreaView, ScrollView, View, Image } from "react-native";
+import { Text, SafeAreaView, View, Image } from "react-native";
 import React from "react";
 import useAppWrite from "@/lib/useAppwrite";
-import { getEventById } from "@/lib/appwrite";
+import { getEventById, getImageUrl } from "@/lib/appwrite";
 import { useLocalSearchParams } from "expo-router";
 import icons from "@/constants/icons";
 import LatestNotification from "@/components/LatestNotification";
@@ -26,7 +26,7 @@ const Event = () => {
       {event[0] && !isLoading && (
         <>
           <Image
-            source={{ uri: event[0].coverImg }}
+            source={{ uri: getImageUrl(event[0].coverId)}}
             className="w-full h-40"
             resizeMode="cover"
             alt={event[0].title}

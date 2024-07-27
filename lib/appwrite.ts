@@ -7,8 +7,10 @@ import {
   Databases,
   Query,
   Models,
+  Storage
 } from "react-native-appwrite";
 import * as FileSystem from 'expo-file-system';
+import {EventFormInterface, EventInterface} from "@/Interfaces/eventInterface";
 
 interface AppwriteConfig {
   endpoint: string;
@@ -38,12 +40,12 @@ export const appwriteConfig: AppwriteConfig = {
 
 const {
   endpoint,
-  platform,
   projectId,
   databaseId,
   userCollectionId,
   eventsCollectionId,
   storageId,
+  categoriesCollectionId,
 } = appwriteConfig;
 
 const client = new Client();
@@ -52,6 +54,7 @@ client.setEndpoint(endpoint).setProject(projectId);
 const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 interface CreateUserParams {
   email: string;
@@ -88,29 +91,15 @@ export const createUser = async ({ email, password, username }: CreateUserParams
 
     return newUser;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
 
-// Auth
-
-export const joinWithCode = async ({ eventCode }) => {
-  try {
-    //Search Guest with the eventCode and route to the event.
-
-    //Si no existe el eventCode del guest, saltar error
-    if (!session) throw Error;
-
-    //Poner en la base de datos que el invitado a entrado
-
-    //Ir al evento asignado al guest
-    //router.replace('/')
-    return eventCode; //Provisional
-  } catch (error) {
-    Alert.alert("Error", error.message);
-  }
-};
+interface SignInParams {
+  email: string;
+  password: string;
+}
 
 export const signIn = async ({ email, password }: SignInParams): Promise<Models.Session> => {
   try {
@@ -125,27 +114,20 @@ export const signIn = async ({ email, password }: SignInParams): Promise<Models.
   }
 };
 
-export const signOut = async (): Promise<object> => {
+export const signOut = async (): Promise<void> => {
   try {
-    const session = await account.deleteSession("current");
-    return session;
+    await account.deleteSession("current");
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
 
-interface JoinWithCodeParams {
-  eventCode: string;
-}
-
-// Users
-
-//Check session
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<Models.Document> => {
   try {
     const currentAccount = await account.get();
 
-    if (!currentAccount) throw Error;
+    if (!currentAccount) throw new Error("No current account");
 
     const currentUser = await databases.listDocuments(
       databaseId,
@@ -153,35 +135,25 @@ export const getCurrentUser = async () => {
       [Query.equal("accountId", currentAccount.$id)]
     );
 
-    if (!currentUser) throw Error;
+    if (!currentUser) throw new Error("User not found");
+
     return currentUser.documents[0];
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error;
   }
 };
-
-// Events
-
-interface CreateEventParams {
-  title: string;
-  coverImg: string;
-  description: string;
-  start_date: string;
-  finish_date: string;
-  categories: string[];
-  creator: string;
-}
 
 export const createEvent = async ({
   title,
   description,
   start_date,
   finish_date,
-  // coverImg,
   location,
-}): CreateEventParams => {
+  coverImg
+}: EventFormInterface): Promise<Models.Document> => {
   try {
-    const currentUserId = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     const newEvent = await databases.createDocument(
       databaseId,
@@ -192,16 +164,16 @@ export const createEvent = async ({
         description,
         start_date,
         finish_date,
-        //coverImg,
-        creator: currentUserId.$id,
+        creator: currentUser.$id,
         location,
+        coverId: coverImg
       }
     );
 
     return newEvent;
   } catch (error) {
-    console.log(error);
-    throw new Error(error);
+    console.error(error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -214,6 +186,7 @@ export const getAllEvents = async (): Promise<Models.Document[]> => {
 
     return events.documents;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -228,26 +201,23 @@ export const getLatestEvents = async (): Promise<Models.Document[]> => {
 
     return events.documents;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
 
-export const getEventById = async ($id: string): Promise<Models.Document[]> => {
+export const getEventById = async (id: string): Promise<Models.Document[]> => {
   try {
-    const currentAccount = await account.get();
-
-    if (!currentAccount) throw new Error("No current account");
-
     const event = await databases.listDocuments(
       databaseId,
       eventsCollectionId,
-      [Query.equal("$id", $id)]
+      [Query.equal("$id", id)]
     );
 
     if (!event) throw new Error("Event not found");
     return event.documents;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
@@ -262,6 +232,7 @@ export const searchEvents = async (query: string): Promise<Models.Document[]> =>
 
     return events.documents;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -276,13 +247,12 @@ export const getUserEvents = async (userId: string): Promise<Models.Document[]> 
 
     return events.documents;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
 
-// CATEGORIES
-
-export const getAllCategories = async () => {
+export const getAllCategories = async (): Promise<Models.Document[]> => {
   try {
     const categories = await databases.listDocuments(
       databaseId,
@@ -291,19 +261,18 @@ export const getAllCategories = async () => {
 
     return categories.documents;
   } catch (error) {
-    throw new Error(error);
+    console.error(error);
+    throw new Error((error as Error).message);
   }
 };
-
-// Storage
 
 interface UploadImageParams {
   image: string;
   setUploading: (uploading: boolean) => void;
 }
 
-export const uploadImage = async ({ image, setUploading }: UploadImageParams): Promise<void> => {
-  if (!image) return;
+export const uploadImage = async ({ image, setUploading }: UploadImageParams) => {
+  if (!image) return Error("No image for upload");
 
   setUploading(true);
 
@@ -325,13 +294,11 @@ export const uploadImage = async ({ image, setUploading }: UploadImageParams): P
       type: mimeType,
     } as any);
 
-    const response = await fetch(`${appwriteConfig.endpoint}/storage/buckets/${appwriteConfig.storageId}/files`, {
+    const response = await fetch(`${appwriteConfig.endpoint}/storage/buckets/${storageId}/files`, {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
         'X-Appwrite-Project': appwriteConfig.projectId,
-        // Add authentication header if necessary
-        // 'X-Appwrite-Key': 'your-api-key' // Or use your preferred authentication method
       },
       body: formData,
     });
@@ -342,12 +309,17 @@ export const uploadImage = async ({ image, setUploading }: UploadImageParams): P
     }
 
     const result = await response.json();
-    console.log('File uploaded successfully:', result);
+
     Alert.alert('Success', 'Image uploaded successfully!');
-  } catch (error) {
-    console.error('Error uploading file:', error);
+    return result.$id;
+  } catch (error:  any) {
     Alert.alert('Error', 'Failed to upload image. Please try again.');
+    return Error('Error uploading file:', error);
   } finally {
     setUploading(false);
   }
+};
+
+export const getImageUrl = (fileId: string): string => {
+  return storage.getFilePreview(storageId, fileId).href;
 };

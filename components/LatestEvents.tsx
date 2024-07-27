@@ -1,8 +1,9 @@
 import { FlatList, Image, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import EventInterface from "@/Interfaces/eventInterface";
+import {EventInterface} from "@/Interfaces/eventInterface";
 import * as Animatable from "react-native-animatable";
 import { router } from "expo-router";
+import { getImageUrl } from "@/lib/appwrite";
 
 interface LatestEventsProps {
   events: EventInterface[];
@@ -44,7 +45,7 @@ const LatestEventItem = ({ activeItem, item }: LatestEventItemProps) => {
         className="mt-3 relative justify-center items-center"
       >
         <Image
-          source={{ uri: item.coverImg }}
+          source={{ uri: getImageUrl(item.coverId) }}
           resizeMode="cover"
           className=" my-4 w-52 h-72 rounded-[35px] overflow-hidden shadow-lg shadow-black/40"
         />

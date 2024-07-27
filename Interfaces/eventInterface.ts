@@ -1,14 +1,25 @@
 import CreatorInterface from "./userInterface";
 
-export default interface EventInterface {
+export interface EventInterface {
     $id: string,
     title: string,
-    startDate: Date,
-    finishDate: Date,
+    start_date: Date,
+    finish_date: Date,
+    description: string,
+    coverId: string,
+    creator: CreatorInterface,
+    categories?: Array<"">,
+    members?: Array<"">,
+    location: string
+}
+
+export interface EventFormInterface {
+    title: string,
+    start_date: Date,
+    finish_date: Date,
     description: string,
     coverImg: string,
-    creator: CreatorInterface,
-    categories: Array<"">,
-    members: Array<"">,
+    categories?: Array<"">,
+    members?: Array<"">,
     location: string
 }

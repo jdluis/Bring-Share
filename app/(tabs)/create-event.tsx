@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,7 +8,6 @@ import {
   Image,
   Alert
 } from "react-native";
-import React, { useState } from "react";
 import FormTextField from "@/components/FormTextField";
 import icons from "@/constants/icons";
 import FormDateField from "@/components/FormDateField";
@@ -15,63 +15,77 @@ import useFormatDate from "@/lib/useFormatDate";
 import { createEvent, uploadImage } from "@/lib/appwrite";
 import CustomButton from "@/components/CustomButton/CustomButton";
 import * as ImagePicker from 'expo-image-picker';
+import { EventFormInterface } from "@/Interfaces/eventInterface";
+import { router } from "expo-router";
 
-const CreateEvent = () => {
+const CreateEvent: React.FC = () => {
   const [creating, setCreating] = useState<boolean>(false);
-  const [form, setForm] = useState({
+  const [image, setImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [form, setForm] = useState<Omit<EventFormInterface, '$id' | 'creator'>>({
     title: "",
-    description: "",
     start_date: new Date(),
     finish_date: new Date(),
+    description: "",
     coverImg: "",
-    location: "",
+    categories: [],
+    members: [],
+    location: ""
   });
 
-  const handleDateChange = (field: string, date: Date) => {
-    setForm({ ...form, [field]: useFormatDate(date) });
-  };
-
-  const handleSubmit = async () => {
-    setCreating(true);
-    try {
-      let coverImgUrl;
-      if (form.coverImg) {
-        coverImgUrl = await uploadImage(form.coverImg);
-      }
-      
-      //const newEvent = await createEvent({ ...form, coverImg: coverImgUrl });
-      const newEvent = await createEvent(form);
-
-      setCreating(false);
-
-      return newEvent;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setCreating(false);
-    }
-  };
-  
-
   const handleImagePicker = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert(
-        "Permission denied",
-        "Permission to access the gallery is required!"
-      );
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permiso requerido", "Se requiere permiso para acceder a la galería de imágenes.");
       return;
     }
 
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setForm({ ...form, coverImg: result.assets[0].uri });
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImage(result.assets[0].uri);
+      setForm(prev => ({ ...prev, coverImg: result.assets[0].uri }));
+    }
+  };
+
+  const handleDateChange = (field: 'start_date' | 'finish_date', date: Date) => {
+    setForm(prev => ({ ...prev, [field]: date }));
+  };
+
+  const handleSubmit = async () => {
+    setCreating(true);
+    try {
+      if (!image) {
+        setCreating(false);
+        return Alert.alert('Please provide a cover image');
+      }
+      const coverImgId = await uploadImage({ image, setUploading });
+
+      if (coverImgId instanceof Error) {
+        setCreating(false);
+        return Alert.alert('Error', coverImgId.message);
+      }
+
+      const eventData = {
+        ...form,
+        coverImg: coverImgId,
+        start_date: form.start_date,
+        finish_date: form.finish_date
+      };
+
+      const newEvent = await createEvent(eventData as EventFormInterface);
+      Alert.alert("Éxito", "Evento creado exitosamente");
+      router.push(`/${newEvent.$id}`)
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "No se pudo crear el evento. Por favor, inténtalo de nuevo.");
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -82,18 +96,18 @@ const CreateEvent = () => {
 
         <FormTextField
           type="text"
-          title={"Event Title"}
+          title="Event Title"
           value={form.title}
-          placeholder="Give your event a catch title..."
-          handleChangeText={(e: string) => setForm({ ...form, title: e })}
+          placeholder="Give your event a catchy title..."
+          handleChangeText={(e: string) => setForm(prev => ({ ...prev, title: e }))}
         />
         <View className="mt-7 space-y-2">
           <FormTextField
             type="text"
-            title={"Adress"}
+            title="Address"
             value={form.location}
             placeholder="Give your event a location..."
-            handleChangeText={(e: string) => setForm({ ...form, location: e })}
+            handleChangeText={(e: string) => setForm(prev => ({ ...prev, location: e }))}
           />
         </View>
 
@@ -124,33 +138,32 @@ const CreateEvent = () => {
         <View className="mt-7 space-y-2">
           <FormTextField
             type="textarea"
-            title={"Description"}
+            title="Description"
             value={form.description}
             placeholder="Give your event a description..."
             handleChangeText={(e: string) =>
-              setForm({ ...form, description: e })
+              setForm(prev => ({ ...prev, description: e }))
             }
           />
         </View>
 
-        {/* DATE FORMAT ON DATABASE MM/DD/AA HH-MM-SS */}
         <View className="mt-7 space-y-2 flex flex-row justify-between">
           <FormDateField
             value={form.start_date}
             otherStyles="w-[43vw]"
-            title={"Start Date"}
-            handleChangeDate={(date) => handleDateChange("startDate", date)}
+            title="Start Date"
+            handleChangeDate={(date) => handleDateChange("start_date", date)}
           />
           <FormDateField
             value={form.finish_date}
             otherStyles="w-[43vw]"
-            title={"Finish Date"}
-            handleChangeDate={(date) => handleDateChange("finishDate", date)}
+            title="Finish Date"
+            handleChangeDate={(date) => handleDateChange("finish_date", date)}
           />
         </View>
       </ScrollView>
       <CustomButton
-        title={"Create Event"}
+        title="Create Event"
         handlePress={handleSubmit}
         isLoading={creating}
       />
